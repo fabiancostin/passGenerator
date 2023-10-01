@@ -1,8 +1,8 @@
-const GeneratedPassword = () => {
+const GeneratedPassword = ({ generatedPassword }) => {
   return (
     <>
       <div className="generated-password bg-gray-200 flex justify-between items-center p-5 w-[25%] mt-5 text-lg rounded-md">
-        <p>here is your password...</p>
+        <p>{`${generatedPassword}`}</p>
         <button className="copy-btn">
           <svg
             xmlns="http://www.w3.org/2000/svg"

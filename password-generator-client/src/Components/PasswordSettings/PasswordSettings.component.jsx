@@ -1,4 +1,32 @@
-const PasswordSettings = () => {
+import { useState } from "react";
+import axios from "axios";
+
+const PasswordSettings = ({ setGeneratedPassword }) => {
+  const [password, setPassword] = useState("");
+  const [uppercase, setUppercase] = useState(true);
+  const [lowercase, setLowercase] = useState(false);
+  const [numbers, setNumbers] = useState(false);
+  const [symbols, setSymbols] = useState(false);
+
+  const generatePassword = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5050/api/password/generate",
+        {
+          length: 8,
+          useUppercase: uppercase,
+          useLowercase: lowercase,
+          useNumbers: numbers,
+          useSymbols: symbols,
+        }
+      );
+      setPassword(response.data.generatedPassword);
+      setGeneratedPassword(password);
+    } catch (error) {
+      console.error("Error generating password:", error);
+    }
+  };
+
   return (
     <>
       <div className="password-settings bg-gray-200 flex flex-col justify-center items-center mt-3 text-lg w-[25%] p-6 rounded-md min-w-[250px]">
@@ -13,7 +41,7 @@ const PasswordSettings = () => {
               -
             </button>
             <span id="output-length" className="select-none">
-              0
+              8
             </span>
             <button
               id="plus"
@@ -80,7 +108,10 @@ const PasswordSettings = () => {
             <div className="level pl-2 pr-2 pt-4 pb-4 border-black border rounded-sm"></div>
           </div>
         </div>
-        <button className="generate-btn w-full p-3 border border-green-600 rounded-lg mt-5 font-semibold text-xl active:bg-green-600 active:text-white transition hover:bg-green-600 hover:text-white">
+        <button
+          onClick={generatePassword}
+          className="generate-btn w-full p-3 border border-green-600 rounded-lg mt-5 font-semibold text-xl active:bg-green-600 active:text-white transition hover:bg-green-600 hover:text-white"
+        >
           GENERATE
         </button>
       </div>
