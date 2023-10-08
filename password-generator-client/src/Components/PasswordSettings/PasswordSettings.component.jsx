@@ -1,19 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 const PasswordSettings = ({ setGeneratedPassword }) => {
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("here is your password...");
+  const [length, setLength] = useState(8);
   const [uppercase, setUppercase] = useState(true);
-  const [lowercase, setLowercase] = useState(false);
-  const [numbers, setNumbers] = useState(false);
-  const [symbols, setSymbols] = useState(false);
+  const [lowercase, setLowercase] = useState(true);
+  const [numbers, setNumbers] = useState(true);
+  const [symbols, setSymbols] = useState(true);
 
   const generatePassword = async () => {
     try {
       const response = await axios.post(
         "http://localhost:5050/api/password/generate",
         {
-          length: 8,
+          length: length,
           useUppercase: uppercase,
           useLowercase: lowercase,
           useNumbers: numbers,
@@ -21,10 +22,21 @@ const PasswordSettings = ({ setGeneratedPassword }) => {
         }
       );
       setPassword(response.data.generatedPassword);
-      setGeneratedPassword(password);
     } catch (error) {
       console.error("Error generating password:", error);
     }
+  };
+
+  useEffect(() => {
+    setGeneratedPassword(password);
+  }, [password]);
+
+  const minusBtnHandler = () => {
+    if (length > 8) setLength(length - 1);
+  };
+
+  const plusBtnHandler = () => {
+    if (length < 24) setLength(length + 1);
   };
 
   return (
@@ -34,6 +46,7 @@ const PasswordSettings = ({ setGeneratedPassword }) => {
           <p className="select-none">password length:</p>
           <div className="flex justify-evenly items-center w-[40%]">
             <button
+              onClick={minusBtnHandler}
               id="minus"
               type="button"
               className="py-1 px-4 inline-flex justify-center items-center gap-2 rounded-md border-2 border-gray-900 font-semibold text-gray-800 hover:text-green-400 hover:bg-gray-800 hover:border-gray-800 transition-all text-sm dark:hover:bg-gray-900 dark:border-gray-900 dark:hover:border-gray-900 dark:text-black"
@@ -41,9 +54,10 @@ const PasswordSettings = ({ setGeneratedPassword }) => {
               -
             </button>
             <span id="output-length" className="select-none">
-              8
+              {length}
             </span>
             <button
+              onClick={plusBtnHandler}
               id="plus"
               type="button"
               className="py-1 px-4 inline-flex justify-center items-center gap-2 rounded-md border-2 border-gray-900 font-semibold text-gray-800 hover:text-green-400 hover:bg-gray-800 hover:border-gray-800 transition-all text-sm dark:hover:bg-gray-900 dark:border-gray-900 dark:hover:border-gray-900 dark:text-black"

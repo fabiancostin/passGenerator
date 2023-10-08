@@ -1,9 +1,11 @@
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
 const port = process.env.PORT || 5050;
 
 app.use(express.json());
+app.use(cors());
 
 app.post("/api/password/generate", (req, res) => {
   const length = req.body.length;
@@ -53,6 +55,7 @@ app.post("/api/password/generate", (req, res) => {
     }
   }
   res.json({ generatedPassword });
+  console.log({ generatedPassword });
 });
 
 app.listen(port, () => {
